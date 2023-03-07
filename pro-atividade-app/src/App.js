@@ -60,7 +60,11 @@ function App() {
                    - Título
                 </h5>
                 <h6>
-                  Prioridade: Alta   
+                  Prioridade:
+                  <span className='ms-1 text-black'>
+                    <i class="me-1 fa-regular fa-face-meh"></i>
+                    Normal   
+                  </span>
                 </h6>
 
               </div>
