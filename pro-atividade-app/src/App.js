@@ -28,13 +28,19 @@ function App() {
     }
   }
 
-  function PrioridadeIcon(aux){
+  function PrioridadeStyle(aux, icon){
     switch(aux){
-       case "1": return "smile";
-       case "2": return "meh";
-       case "3": return "frown";
+       case "1": return icon ? "smile": "success";
+       case "2": return icon ? "meh": "warning";
+       case "3": return icon ? "frown": "danger";
        default: return "Não Definida"
     }
+  }
+
+  function CountId(){
+    if (Math.max.apply(Math,atividades.map((item) => item.id)) < 1){
+      return 1
+    } else {return Math.max.apply(Math,atividades.map((item) => item.id)) +1}
   }
 
   return (
@@ -42,7 +48,7 @@ function App() {
       <form className="row g-3">
         <div className="col-md-6">
           <label className="form-label">ID:</label>
-          <input type="text" className="form-control" id="id" />
+          <input type="text" className="form-control" id="id" readOnly value={CountId()} />
         </div>
 
         <div className="col-md-6">
@@ -79,7 +85,7 @@ function App() {
     
       <div className="mt-3">
         {atividades.map(ativ => (
-          <div key={ativ.id} className="card mb-2 shadow-sm">
+          <div key={ativ.id} className={"card mb-2 shadow-sm border-"+PrioridadeStyle(ativ.prioridade)}>
             <div className="card-body">
               <div className='d-flex justify-content-between'>
                 <h5 className='card-title'>
@@ -88,8 +94,8 @@ function App() {
                 </h5>
                 <h6>
                   Prioridade:
-                  <span className='ms-1 text-black'>
-                    <i className={"me-1 fa-regular fa-face-"+PrioridadeIcon(ativ.prioridade)}></i>
+                  <span className={"ms-1 text-"+PrioridadeStyle(ativ.prioridade)}>
+                    <i className={"me-1 fa-regular fa-face-"+PrioridadeStyle(ativ.prioridade,true)}></i>
                     {PrioridadeLabel(ativ.prioridade)}
                   </span>
                 </h6>
