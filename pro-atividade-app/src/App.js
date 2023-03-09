@@ -1,121 +1,60 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
-
-
-let initiaState = [];
+import AtividadeForm from './components/AtividadeForm';
+import AtividadesListas from './components/AtividadesLista'
 
 function App() {
-  const [atividades, setAtividades] = useState(initiaState)
+  const [index, setIndex] = useState(0)
+  const [atividades, setAtividades] = useState([])
+  const [atividade, setAtividade] = useState({id:0})
 
-  function AddAtividade(e){
-    e.preventDefault();
-    const atividade = {
-          id: document.getElementById('id').value,
-          descricao: document.getElementById('descricao').value,
-          prioridade: document.getElementById('inputPrioridade').value,
-          titulo: document.getElementById('titulo').value
-      }
-    setAtividades([ ...atividades, { ...atividade}]);
-  }
-
-  function PrioridadeLabel(aux){
-    switch(aux){
-       case "1": return "Baixa";
-       case "2": return "Média";
-       case "3": return "Alta";
-       default: return "Não Definida"
+  useEffect ( () => {
+    if (atividades.length <= 0){
+      setIndex(1)
+    } else{
+      setIndex(Math.max.apply(Math,atividades.map((item) => item.id)) +1)
     }
+  },[atividades])
+
+  function AddAtividade(ativ){
+    setAtividades([ ...atividades, { ...ativ, id:index}]);
   }
 
-  function PrioridadeStyle(aux, icon){
-    switch(aux){
-       case "1": return icon ? "smile": "success";
-       case "2": return icon ? "meh": "warning";
-       case "3": return icon ? "frown": "danger";
-       default: return "Não Definida"
-    }
+  function AtualizarAtividade(ativ){
+    setAtividades(atividades.map(item => item.id === ativ.id ? ativ : item ))
+    setAtividade({id:0})
   }
 
-  function CountId(){
-    if (Math.max.apply(Math,atividades.map((item) => item.id)) < 1){
-      return 1
-    } else {return Math.max.apply(Math,atividades.map((item) => item.id)) +1}
+  function CancelarAtividade(){
+    setAtividade({id:0})
+  }
+
+  function DeletarAtividade(id){
+    const atividadesFiltradas = atividades.filter(ativ => ativ.id !== id);
+    setAtividades([ ...atividadesFiltradas])
+  }
+
+  function PegarAtividade(id){
+    const atividade = atividades.filter(ativ => ativ.id === id);
+    setAtividade(atividade[0])
   }
 
   return (
     <>
-      <form className="row g-3">
-        <div className="col-md-6">
-          <label className="form-label">ID:</label>
-          <input type="text" className="form-control" id="id" readOnly value={CountId()} />
-        </div>
-
-        <div className="col-md-6">
-          <label className="form-label">Título:</label>
-          <input type="text" className="form-control" id="titulo" />
-        </div>
-
-        <div className="col-md-6">
-          <label className="form-label">Prioridade</label>
-          <select id="inputPrioridade" className="form-select">
-            <option defaultValue="0">Selecionar...</option>
-            <option value="1">Baixa</option>
-            <option value="2">Média</option>
-            <option value="3">Alta</option>
-          
-          </select>
-        </div>
-
-        <div className="col-md-6">
-          <label className="form-label">Descrição:</label>
-          <input type="text" className="form-control" id="descricao" />
-        </div>
-
-        <hr />
-        <div className="col-12">
-          <button 
-            className="btn btn-outline-secondary"
-            onClick={AddAtividade}
-          >
-            Adicionar Atividade
-          </button>
-        </div>
-      </form>
-    
-      <div className="mt-3">
-        {atividades.map(ativ => (
-          <div key={ativ.id} className={"card mb-2 shadow-sm border-"+PrioridadeStyle(ativ.prioridade)}>
-            <div className="card-body">
-              <div className='d-flex justify-content-between'>
-                <h5 className='card-title'>
-                  <span className="badge bg-secondary me-2">{ativ.id}</span>
-                   - {ativ.titulo}
-                </h5>
-                <h6>
-                  Prioridade:
-                  <span className={"ms-1 text-"+PrioridadeStyle(ativ.prioridade)}>
-                    <i className={"me-1 fa-regular fa-face-"+PrioridadeStyle(ativ.prioridade,true)}></i>
-                    {PrioridadeLabel(ativ.prioridade)}
-                  </span>
-                </h6>
-
-              </div>
-              <p className="card-text"> {ativ.descricao}</p>
-              <div className='d-flex justify-content-end pt-2 m-0 border-top'>
-                <button className='btn btn-sm btn-outline-primary me-2'>
-                  <i className='fas fa-pen me-2'></i>
-                  Editar
-                </button>
-                <button className='btn btn-sm btn-outline-danger'>
-                  <i className='fas fa-trash me-2'></i>
-                  Excluir
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      <AtividadeForm 
+        AddAtividade = {AddAtividade}
+        atividades = {atividades}
+        ativSelecionada = {atividade}
+        AtualizarAtividade = {AtualizarAtividade}
+        CancelarAtividade = {CancelarAtividade}
+      />
+      <AtividadesListas 
+        atividades = {atividades}
+        DeletarAtividade = {DeletarAtividade}
+        PegarAtividade = {PegarAtividade}
+      />
+      
     </>
   );
 }
