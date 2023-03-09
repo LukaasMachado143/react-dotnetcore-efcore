@@ -50,7 +50,7 @@ export default function AtividadeForm(props) {
 
   return (
     <>
-    <h1>{props.ativSelecionada.id !== 0 ? 'Alterar Atividade: ' + props.ativSelecionada.id : 'Cadastrar Nova Atividade'}</h1>
+    <h1>{props.ativSelecionada.id !== 0 ? 'Alterar Atividade : ' + props.ativSelecionada.id : 'Cadastrar Nova Atividade'}</h1>
     <form className="row g-3" onSubmit={handleSubmit}>
         <div className="col-md-6">
           <label className="form-label">Título:</label>
