@@ -23,8 +23,8 @@ namespace ProAtividade.API.Controllers
             return Atividades;
         }
 
-        [HttpGet("{auxId}")]
-        public AtividadeModel Get(int auxId) => Atividades.FirstOrDefault(ati => ati.id == auxId);
+        [HttpGet("{id}")]
+        public AtividadeModel? Get(int id) => Atividades.FirstOrDefault(ati => ati.Id == id);
 
         [HttpPost]
         public IEnumerable<AtividadeModel> Post(AtividadeModel atividade){
